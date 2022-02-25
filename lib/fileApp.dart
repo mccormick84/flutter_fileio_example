@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -110,7 +111,10 @@ class _FileApp extends State<FileApp> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          setState(() {});
+          writeFruit(controller.value.text);
+          setState(() {
+            itemList.add(controller.value.text);
+          });
         },
         child: Icon(Icons.add),
       ),
@@ -133,5 +137,13 @@ class _FileApp extends State<FileApp> {
     } catch (e) {
       print(e.toString());
     }
+  }
+
+  // 현재 fruit.txt 파일의 내용을 가져와서 매개변수로 전달받은 과일 이름 fruit를 추가한 후 다시 파일에 기록
+  void writeFruit(String fruit) async {
+    var dir = await getApplicationDocumentsDirectory();
+    var file = await File(dir.path + '/fruit.txt').readAsString();
+    file = file + '\n' + fruit;
+    File(dir.path + '/fruit.txt').writeAsStringSync(file);
   }
 }
